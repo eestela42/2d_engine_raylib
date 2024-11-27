@@ -27,6 +27,7 @@ Vu du dessus
 100000000001
 111111111111
 
+
 //Phase 1
 
 Trouver comment parser la map
@@ -34,8 +35,13 @@ Trouver comment parser la map
 Afficher la map avec raylib
 
 Gerer les deplacement du joueur
+{
+	deplacemnt fluide (float)
+}
 
 Gerer les entitees
+
+
 
 //Phase 2
 
