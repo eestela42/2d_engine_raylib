@@ -1,14 +1,37 @@
 #include "main.h"
 
 
-
+void manager_input(t_player *player, t_map *map)
+{
+	if (IsKeyDown(KEY_A))
+	{
+		if (map->data[(int)(player->x - 0.2)][(int)player->y] == 0)
+			player->x -= 0.1;
+		
+	}
+	if (IsKeyDown(KEY_D))
+	{
+		if (map->data[(int)(player->x + 0.1)][(int)player->y] == 0)
+			player->x += 0.1;
+	}
+	if (IsKeyDown(KEY_W))
+	{
+		if (map->data[(int)player->x][(int)(player->y - 0.2)] == 0)
+			player->y -= 0.1;
+	}
+	if (IsKeyDown(KEY_S))
+	{
+		if (map->data[(int)player->x][(int)(player->y + 0.1)] == 0)
+		player->y += 0.1;
+	}
+}
 
 int main()
 {
     // Initialisation de la fenêtre
     t_window window;
-	window.screenWidth = 1920;
-	window.screenHeight = 1080;
+	window.screenWidth = 500;
+	window.screenHeight = 500;
 	window.sprite_size = 64;
 
     InitWindow(window.screenWidth, window.screenHeight, "BOMBAMAN");
@@ -27,19 +50,21 @@ int main()
 		map.data[i] = malloc(sizeof(char) * 100);
 		for (int j = 0; j < 100; j++)
 		{
-			if ((i + j ) % 2 == 0)
-				map.data[i][j] = 0;
-			else
+			if (rand() % 100 < 10)
+			{
+				map.data[i][j] = 1;
+				continue;
+			}
 				map.data[i][j] = 0;
 		}
 	}
 	
-	map.data[50][49] = 1;
+	map.data[50][50] = 0;
     
 	//init
 	t_player player;
-	player.x = 50;
-	player.y = 50;
+	player.x = 50.1;
+	player.y = 50.5;
 
 
 	Texture2D base_player_text = LoadTexture("textures/vaisseau.png");
@@ -54,19 +79,36 @@ int main()
 
     while (!WindowShouldClose()) {
         // Démarrer le dessin
-		ClearBackground(RED);
+		ClearBackground(BLACK);
         BeginDrawing();
+		manager_input(&player, &map);
 
-		int nbr_text_x = window.screenWidth / window.sprite_size + 2;
-		int nbr_text_y = window.screenHeight / window.sprite_size + 2;
+		int nbr_text_x = (window.screenWidth / window.sprite_size) / 2;
+		int nbr_text_y = (window.screenHeight / window.sprite_size) / 2;
 		
 
-		for (int y = -nbr_text_y; y < -nbr_text_y; y++){
-		for (int x = -nbr_text_x; x < -nbr_text_x; x++)
-		{
-			int draw_x = player.x * window.sprite_size;
-			DrawTexture(void_text, x * window.sprite_size, y * window.sprite_size, WHITE);
+		float offset_x = -(player.x - (int)player.x);
+		float offset_y = -(player.y - (int)player.y);
+		
 
+		// printf("number of text_x = %d, number of text_y = %d\n", nbr_text_x, nbr_text_y);
+		for (int y = -nbr_text_y - 2; y <= nbr_text_y + 2; y++){
+		for (int x = -nbr_text_x - 2; x <= nbr_text_x + 2; x++)
+		{
+			
+			int text_x = (offset_x + x + nbr_text_x + 1) * window.sprite_size;
+			int text_y = (offset_y + y + nbr_text_y + 1) * window.sprite_size;
+			// printf("x = %d, y = %d\n", text_x, text_y);
+			// if ( text_x < 0 || text_x > window.screenWidth || text_y < 0 || text_y > window.screenHeight)
+			// 	continue;
+			int type = map.data[(int)player.x + x ][(int)player.y + y];
+
+			if (type == 0)
+				DrawTexture(void_text, text_x, text_y, WHITE);
+			else 
+				DrawTexture(wall_text, text_x, text_y, WHITE);
+			int size_dot = 8;
+			DrawCircle(window.screenWidth / 2 + size_dot/2, window.screenHeight / 2 + size_dot/2, size_dot, RED);
 		}
 		}
 
