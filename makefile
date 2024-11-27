@@ -1,26 +1,22 @@
-NAME = PONG
+NAME = BOMBERMAN
 
-CC = g++
+CC = gcc
 
-CFLAGS = -Wall -Wextra -Werror -fsanitize=address
+CFLAGS = 
 
-SRC = main.cpp          \
-        menuClass.cpp              \
-        ballClass.cpp                \
-        gameClass.cpp		\
-		mapClass.cpp		\
-		paddleClass.cpp		\
+SRC = main.c \
+tools.c
 
-SRCS            = $(addprefix srcs/, $(SRC))
 
-OBJS            = $(addprefix objs/, $(SRC:.cpp=.o))
+SRCS            =  $(addprefix srcs/, $(SRC))
 
+OBJS            = $(addprefix objs/, $(SRC:.c=.o))
 all: $(NAME)
 
 $(NAME): $(OBJS)
 	$(CC) $(OBJS) -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 $(CFLAGS) -o $(NAME)
 
-objs/%.o: srcs/%.cpp
+objs/%.o: srcs/%.c
 	$(CC) $(CFLAGS) -o $@ -c $<
 	
 .c.o:
