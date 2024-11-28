@@ -30,7 +30,7 @@ int main()
 {
     // Initialisation de la fenêtre
     t_window window;
-	window.screenWidth = 1080;
+	window.screenWidth = 1500;
 	window.screenHeight = 720;
 	window.sprite_size = 64;
 
@@ -79,6 +79,7 @@ int main()
 
 	int nbr_text_x = (window.screenWidth / window.sprite_size) + 2;
 	int nbr_text_y = (window.screenHeight / window.sprite_size) + 2;
+
     while (!WindowShouldClose()) {
 
         // Démarrer le dessin
@@ -88,8 +89,7 @@ int main()
 
 		printf("Player x = %f, y = %f\n", player.x, player.y);
 
-		
-
+		//on recupere la partie decimale de la pos du player
 		float offset_x = -(player.x - (int)player.x);
 		float offset_y = -(player.y - (int)player.y);
 
@@ -98,59 +98,39 @@ int main()
 		for (int y = 0; y <= nbr_text_x; y++){
 		for (int x = 0; x <= nbr_text_x; x++)
 		{
-
+			//on recupere la pos du centre de l'ecran
 			int text_x = window.screenWidth / 2;
 			int text_y = window.screenHeight / 2;
 
+			//et on calcule la pos du sprite (par rapport au centre de l'ecran (au dessus)) 																					j'suis pas sur de ce systeme pour le long terme mais ca marche pour l'instant donc chill #chill
 			text_x += //distance sprite <=> player
 				(x - nbr_text_x / 2 + offset_x) * window.sprite_size;
 
 			text_y += //distance sprite <=> player
 				(y - nbr_text_y / 2 + offset_y) * window.sprite_size;
 			
-			int pos_text_x = (int)player.x + x - nbr_text_x / 2;
-			int pos_text_y = (int)player.y + y - nbr_text_y / 2;
+			//on recupere la pos du block dans la map (char**)
+			int pos_block_x = (int)player.x + x - nbr_text_x / 2;
+			int pos_block_y = (int)player.y + y - nbr_text_y / 2;
 
-			if (pos_text_x < 0 || pos_text_x > map.size_X || pos_text_y < 0 || pos_text_y > map.size_Y)
+			if (pos_block_x < 0 || pos_block_x > map.size_X || pos_block_y < 0 || pos_block_y > map.size_Y)
 				continue;
-			// // printf("x = %d, y = %d\n", text_x, text_y);
 			
-			int type = map.data[pos_text_x][pos_text_y];
+			int type = map.data[pos_block_x][pos_block_y];
 
-				if (type == 0)
-					DrawTexture(void_text, text_x, text_y, WHITE);
-				else 
-					DrawTexture(wall_text, text_x, text_y, WHITE);
-				int size_dot = 15;
-				DrawCircle(window.screenWidth / 2, window.screenHeight / 2, size_dot, RED);
+			if (type == 0)
+				DrawTexture(void_text, text_x, text_y, WHITE);
+			else 
+				DrawTexture(wall_text, text_x, text_y, WHITE);
+			int size_dot = 15;
+			DrawCircle(window.screenWidth / 2, window.screenHeight / 2, size_dot, RED);
 		}
 		}
-
-		// for (int y = -nbr_text_y; y <= nbr_text_y; y++){
-		// for (int x = -nbr_text_x; x <= nbr_text_x; x++)
-		// {
-			
-		// 	int text_x = (offset_x + x + nbr_text_x) * window.sprite_size;
-		// 	int text_y = (offset_y + y + nbr_text_y) * window.sprite_size;
-		// 	// printf("x = %d, y = %d\n", text_x, text_y);
-		// 	if ( player.x + x < 0 || player.x + x > map.size_X || player.y + y < 0 || player.y + y > map.size_Y)
-		// 		continue;
-		// 	int type = map.data[(int)player.x + x ][(int)player.y + y];
-
-		// 	if (type == 0)
-		// 		DrawTexture(void_text, text_x, text_y, WHITE);
-		// 	else 
-		// 		DrawTexture(wall_text, text_x, text_y, WHITE);
-		// 	int size_dot = 8;
-		// 	DrawCircle(window.screenWidth / 2 + size_dot/2, window.screenHeight / 2 + size_dot/2, size_dot, RED);
-		// }
-		// }
 
 
         EndDrawing(); // Fin du dessin
     }
 
-    // Fermer la fenêtre et nettoyer les ressources
     CloseWindow();
 
     return 0;
